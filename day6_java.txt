@@ -1,0 +1,425 @@
+Online Test Example
+
+Question.java
+
+package com.lti.training.day5.collections;
+import java.util.List;
+public class Question {
+	private String question;
+	private List<Option> options;
+	
+	public Question()
+	{
+	}
+	
+	public Question(String question, List<Option> options) {
+		super();
+		this.question = question;
+		this.options = options;
+	}
+
+	public String getQuestion() {
+		return question;
+	}
+
+	public void setQuestion(String question) {
+		this.question = question;
+	}
+
+	public List<Option> getOptions() {
+		return options;
+	}
+
+	public void setOptions(List<Option> options) {
+		this.options = options;
+	}
+
+	
+	
+}
+---------------------
+Option.java
+package com.lti.training.day5.collections;
+
+public class Option {
+	private String option;
+	private boolean isRightAnswer;
+	
+	public Option()
+	{
+		
+	}
+	public Option(String option, boolean isRightAnswer) {
+		super();
+		this.option = option;
+		this.isRightAnswer = isRightAnswer;
+	}
+	public String getOption() {
+		return option;
+	}
+	public void setOption(String option) {
+		this.option = option;
+	}
+	public boolean isRightAnswer() {
+		return isRightAnswer;
+	}
+	public void setRightAnswer(boolean isRightAnswer) {
+		this.isRightAnswer = isRightAnswer;
+	}
+	
+
+}
+---------------------
+QuestionBank.java
+
+package com.lti.training.day5.collections;
+
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+public class QuestionBank {
+	
+	//Key-String is name of subject and Value-List<Question> is list of subjects
+    private Map<String, List<Question>> questionBank;
+    public QuestionBank()
+    {
+    	questionBank=new HashMap<>();	
+    }
+    public void addNewSubject(String subject)
+    {
+    	questionBank.put(subject, new ArrayList<>());
+    }
+    public void addNewQuestion(String subject,Question question)
+    {
+    	List<Question> questions=questionBank.get(subject);
+    	questions.add(question);
+    }
+    public List<Question> getQuestionsFor(String subject)
+    {
+    	return questionBank.get(subject);
+    }
+    
+}
+------------------
+QuestionBankLoader.java
+
+package com.lti.training.day5.collections;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class QuestionBankLoader {
+private QuestionBank questionBank;
+private int score=0;
+public QuestionBankLoader()
+{
+	questionBank=new QuestionBank();
+}
+public void loadQuestionOnJava()
+{
+	questionBank.addNewSubject("Java");
+	Question q=new Question();
+	q.setQuestion("What is a class?");
+	List<Option> options=new ArrayList<>();
+	Option o1=new Option("class is template",true);
+	Option o2=new Option("class is a classroom",false);
+	Option o3=new Option("class is a datatype",false);
+	Option o4=new Option("class is a class",false);
+	options.add(o1);
+	options.add(o2);
+	options.add(o3);
+	options.add(o4);
+	q.setOptions(options);
+	questionBank.addNewQuestion("Java", q);
+	
+	 q=new Question();
+	q.setQuestion("What is a object?");
+	options=new ArrayList<>();
+	o1=new Option("Object is a thing",false);
+	o2=new Option("Object is an instance of the class",true);
+	o3=new Option("Object is a prototype",false);
+	o4=new Option("Object is Object",false);
+	options.add(o1);
+	options.add(o2);
+	options.add(o3);
+	options.add(o4);
+	q.setOptions(options);
+	questionBank.addNewQuestion("Java", q);
+	
+	 q=new Question();
+	q.setQuestion("What is a Wrapper class?");
+	options=new ArrayList<>();
+	o1=new Option("Converts primitive type to object",true);
+	o2=new Option("Converts object to primitive type",false);
+	o3=new Option("are mutable",false);
+	o4=new Option("Is just an object",false);
+	options.add(o1);
+	options.add(o2);
+	options.add(o3);
+	options.add(o4);
+	q.setOptions(options);
+	questionBank.addNewQuestion("Java", q);
+	
+}
+public void startExam()
+{	
+	int cnt=1;
+	Scanner sc=new Scanner(System.in);
+	List<Question> questions=questionBank.getQuestionsFor("Java");
+	for(Question question:questions)
+	{
+		System.out.println("Q."+cnt+""+question.getQuestion());
+		cnt=cnt+1;
+		    for(Option option: question.getOptions())
+		        System.out.println(option.getOption());
+		    
+		    System.out.print("\n Enter the right answer (1-4) :");
+		
+		    int ans=sc.nextInt();
+		    Option selectedOption=question.getOptions().get(ans-1);
+		    if(selectedOption.isRightAnswer())
+		    	score++;
+	}
+
+    System.out.println("\n\n You have scored "+score+" out of  "+questions.size());
+		    
+
+		
+	}
+
+	
+
+public static void main(String[] args) {
+	QuestionBankLoader qbl=new QuestionBankLoader();
+	qbl.loadQuestionOnJava();
+	qbl.startExam();
+}
+}
+________________________________________
+
+
+MULTITHREADING
+SMALL EXAMPLE
+
+package com.lti.training.day6.multithreading;
+
+public class Example1 {
+	//inner classes  inside class writing another class
+      class Task1 implements Runnable 
+      {
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			
+			for(int i=0;i<5;i++)
+			{
+				System.out.println("Task1 running");
+			}
+		}
+      }
+		class Task2 implements Runnable {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				
+				for(int i=0;i<5;i++)
+				{
+					System.out.println("Task 2 running");
+				}
+			}
+      }
+      
+	private void launch() {
+		Task1 task1= new Task1();
+		Task2 task2=new Task2();
+		Thread th1=new Thread(task1);
+		Thread th2= new Thread(task2);
+		th1.setDaemon(true);
+		th2.setDaemon(true);
+		th1.start();
+		th2.start();   
+	}
+	public static void main(String[] args) {
+		new Example1().launch();
+	}
+	
+}
+-----------------------
+eg:
+
+package com.lti.training.day6.multithreading;
+
+public class Example2 {
+           class SomeTask implements Runnable{
+        	   
+        	   public void run() {
+        	   System.out.println("line1 executed");
+        	   try { 
+        		   Thread.sleep(1000*60*60);
+        	   }
+        	   catch(InterruptedException e) {
+        		   System.out.println("evaru nanu lepaaru?");
+        	   }
+        	   System.out.println("line 2 executed");
+        	   }
+        	   }
+    void launch() {
+    	Thread th=new Thread(new SomeTask());
+         th.start();	
+         try { Thread.sleep(5000); } catch(Exception e) {}
+         th.interrupt();
+    }
+    public static void main(String[] args) {
+		new Example2().launch();
+		
+	}
+    }
+
+___________________________
+SYNCHRONIZED KEYWORD FOR CONCURRENCY
+
+package com.lti.training.day6.multithreading;
+
+class BankAccount
+{
+	int acno;
+	double balance;
+	
+	BankAccount(int acno,double balance)
+	{
+		this.acno=acno;
+		this.balance=balance;
+	}
+	
+	public synchronized void withdraw(double amount)
+	{
+		try	{	Thread.sleep(100);	}	catch (Exception e) { 	}
+		if(amount<balance)
+		{
+			try{ Thread.sleep(100);  	}   catch (Exception e) {	}	
+			balance-=amount;
+			try{ Thread.sleep(100);		}	catch (Exception e) { 	}
+			System.out.println("Balance left "+balance);
+		}
+		else
+			System.out.println("Insufficient balance");
+		}
+	}
+class Transaction implements Runnable
+{
+	
+	   BankAccount bankAccount;
+		Transaction(BankAccount bankAccount)
+		{
+			this.bankAccount=bankAccount;
+		}
+		@Override
+		public void run() {
+			bankAccount.withdraw(5000);
+	}
+}
+public class Example3 {
+	
+public static void main(String[] args) {
+	BankAccount bankAcc=new BankAccount(1111, 6000);
+	Transaction tx1=new Transaction(bankAcc);
+	Transaction tx2=new Transaction(bankAcc);
+	Thread th1=new Thread(tx1);
+	Thread th2=new Thread(tx2);
+	th1.start();
+	th2.start();
+}
+}
+
+___________________________
+IO STREAMS
+
+ReadFile.java
+
+package com.lti.training.day6.streams;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+public class ReadFile {
+	public static void main(String[] args) {
+		FileInputStream inFile=null;
+		try {
+			inFile=new FileInputStream("sample.txt");
+			int ch=0;
+			while(true) {
+			ch=inFile.read();
+			if(ch==-1)  // -1 indicate end of file
+				break;
+			System.out.print((char)ch); // to get the decoded text
+			System.out.println(ch);    // to get the binary text
+			}
+			}
+	catch (FileNotFoundException e) {
+		System.out.println("please check the no of your classes!");
+		
+	}
+		catch (IOException e) {
+			System.out.println("Please contact Mr.ahweta, HDD curropted");
+		}
+			
+		finally {
+			try { inFile.close(); } catch(Exception e ) {
+		}
+	}
+	}
+}
+
+__________________________
+
+READ FROM ONE FILE AND WRITE IN THE OTHER
+
+package com.lti.training.day6.streams;
+    
+    import java.io.FileInputStream;
+	import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+	
+	public class CopyFile {
+
+		public static void main(String[] args) {
+			FileInputStream inFile=null;
+			FileOutputStream outFile=null;
+			try {
+				inFile=new FileInputStream("sample.txt");
+				outFile=new FileOutputStream("Sample2.txt");
+				int ch=0;
+				while(true) {
+				ch=inFile.read();
+				if(ch==-1)  // -1 indicate end of file
+					break;
+				
+				
+				
+				outFile.write((char)ch);
+				}
+				System.out.println("File copied successfully");
+				}
+		catch (FileNotFoundException e) {
+			System.out.println("please check the no of your classes!");
+			
+		}
+			catch (IOException e) {
+				System.out.println("Please contact Mr.ahweta, HDD curropted");
+			}
+				
+			finally {
+				try { inFile.close(); 
+				outFile.close();
+				} catch(Exception e ) {
+			}
+		}
+		}
+	}
+_________________________
